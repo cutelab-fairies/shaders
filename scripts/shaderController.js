@@ -50,7 +50,7 @@
 					grabbable: false,
 					grabFollowsController: false,
 				},
-				userData: {
+				userData: JSON.stringify({
 					ProceduralEntity: {
 						shaderUrl: "https://shaders.cutelab.space/shadertoy/terrainTubes.fs",
 						channels: [
@@ -61,7 +61,7 @@
 						],
 						version: 4
 					},
-				},
+				}),
 			}));
 		});
 	}
