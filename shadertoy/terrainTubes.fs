@@ -20,7 +20,7 @@
 
 #define iTime iGlobalTime
 
-#define USE_BOUND_PLANE
+#define USE_BOUND_PLANE 
 
 
 const mat2 m2 = mat2(1.6,-1.2,1.2,1.6);
@@ -287,6 +287,7 @@ void getProceduralColorWithPosition(vec3 rayOrigin, vec3 rayDir, out vec3 fragCo
 
 		// sun scatter
 		col += 0.2*0.2*vec3(1.5,0.7,0.4)*pow( sundotc, 4.0 );
+		rayPos = vec3(rayDir*1000000);
 	}
 	else
 	{
