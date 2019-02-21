@@ -110,48 +110,48 @@ vec3 render( in vec3 ro, in vec3 rd, in float anim, out vec3 rayPos)
 	return sqrt(col);
 }
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
-{
-	float time = iTime*0.25 + 0.01*iMouse.x;
-	float anim = 1.1 + 0.5*smoothstep( -0.3, 0.3, cos(0.1*iTime) );
+// void mainImage( out vec4 fragColor, in vec2 fragCoord )
+// {
+// 	float time = iTime*0.25 + 0.01*iMouse.x;
+// 	float anim = 1.1 + 0.5*smoothstep( -0.3, 0.3, cos(0.1*iTime) );
 	
-	vec3 tot = vec3(0.0);
-	#if AA>1
-	for( int jj=0; jj<AA; jj++ )
-	for( int ii=0; ii<AA; ii++ )
-	#else
-	int ii = 1, jj = 1;
-	#endif
-	{
-		vec2 q = fragCoord.xy+vec2(float(ii),float(jj))/float(AA);
-		vec2 p = (2.0*q-iResolution.xy)/iResolution.y;
+// 	vec3 tot = vec3(0.0);
+// 	#if AA>1
+// 	for( int jj=0; jj<AA; jj++ )
+// 	for( int ii=0; ii<AA; ii++ )
+// 	#else
+// 	int ii = 1, jj = 1;
+// 	#endif
+// 	{
+// 		vec2 q = fragCoord.xy+vec2(float(ii),float(jj))/float(AA);
+// 		vec2 p = (2.0*q-iResolution.xy)/iResolution.y;
 
-		// camera
-		vec3 ro = vec3( 2.8*cos(0.1+.33*time), 0.4 + 0.30*cos(0.37*time), 2.8*cos(0.5+0.35*time) );
-		vec3 ta = vec3( 1.9*cos(1.2+.41*time), 0.4 + 0.10*cos(0.27*time), 1.9*cos(2.0+0.38*time) );
-		float roll = 0.2*cos(0.1*time);
-		vec3 cw = normalize(ta-ro);
-		vec3 cp = vec3(sin(roll), cos(roll),0.0);
-		vec3 cu = normalize(cross(cw,cp));
-		vec3 cv = normalize(cross(cu,cw));
-		vec3 rd = normalize( p.x*cu + p.y*cv + 2.0*cw );
+// 		// camera
+// 		vec3 ro = vec3( 2.8*cos(0.1+.33*time), 0.4 + 0.30*cos(0.37*time), 2.8*cos(0.5+0.35*time) );
+// 		vec3 ta = vec3( 1.9*cos(1.2+.41*time), 0.4 + 0.10*cos(0.27*time), 1.9*cos(2.0+0.38*time) );
+// 		float roll = 0.2*cos(0.1*time);
+// 		vec3 cw = normalize(ta-ro);
+// 		vec3 cp = vec3(sin(roll), cos(roll),0.0);
+// 		vec3 cu = normalize(cross(cw,cp));
+// 		vec3 cv = normalize(cross(cu,cw));
+// 		vec3 rd = normalize( p.x*cu + p.y*cv + 2.0*cw );
 
-		tot += render( ro, rd, anim );
-	}
+// 		tot += render( ro, rd, anim );
+// 	}
 	
-	tot = tot/float(AA*AA);
+// 	tot = tot/float(AA*AA);
 	
-	fragColor = vec4( tot, 1.0 );	
+// 	fragColor = vec4( tot, 1.0 );	
 
-}
+// }
 
 float getProceduralFragmentWithPosition(inout ProceduralFragmentWithPosition frag) {
 	vec3 rayOrigin = getEyeWorldPos();
 	vec3 worldPos = (iWorldOrientation*(_position.xyz*iWorldScale))+iWorldPosition;
 	vec3 rayDir = normalize(worldPos-rayOrigin);
 	
-	vec3 offsetMul = 0.01;
-	vec3 offsetPos = vec3(0,0,0.5);
+	float offsetMul = 0.01;
+	vec3 offsetPos = vec3(1);
 
 	rayOrigin *= offsetMul;
 	rayOrigin -= offsetPos;
@@ -159,9 +159,9 @@ float getProceduralFragmentWithPosition(inout ProceduralFragmentWithPosition fra
 	float anim = 1.1 + 0.5*smoothstep( -0.3, 0.3, cos(0.5*iTime) );
 
 	vec3 rayPos = vec3(0);
-	vec3 fragColor = render( rayOrigin + vec3(0.82,1.2,-0.3), rayDir, anim, rayPos);
+	vec3 fragColor = render(rayOrigin, rayDir, anim, rayPos);
 
-	frag.position = rayPos/offsetMul + offsetPos;
+	frag.position = (rayPos+offsetPos)/offsetMul;
 	frag.emissive = fragColor;
 	frag.diffuse = vec3(0);
 	frag.specular = vec3(0);
